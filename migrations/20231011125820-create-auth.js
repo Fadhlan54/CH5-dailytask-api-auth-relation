@@ -15,7 +15,7 @@ module.exports = {
       password: {
         type: Sequelize.STRING,
       },
-      cofirmPassword: {
+      confirmPassword: {
         type: Sequelize.STRING,
       },
       userId: {

@@ -16,8 +16,9 @@ module.exports = async (req, res, next) => {
     const user = await User.findByPk(payload.id, {
       include: ["Auth"],
     });
-
+    console.log(user);
     req.user = user;
+    req.payload = payload;
     next();
   } catch (err) {
     next(new ApiError(err.message, 500));

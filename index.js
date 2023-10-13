@@ -19,6 +19,7 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 
 app.use(morgan("dev"));
+
 app.use(router);
 
 app.all("*", (req, res, next) => {

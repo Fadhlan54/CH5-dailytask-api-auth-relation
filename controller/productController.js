@@ -3,11 +3,21 @@ const imagekit = require("../lib/imagekit");
 const ApiError = require("../utils/apiError");
 
 const createProduct = async (req, res, next) => {
-  const { name, price, stock } = req.body;
-  const file = req.file;
-  let img;
-
   try {
+    const { name, price, stock } = req.body;
+    const file = req.file;
+    let img;
+
+    const checkProduct = Product.findOne({
+      where: {
+        name,
+      },
+    });
+
+    if (checkProduct) {
+      next(new ApiError("Product already exists", 400));
+    }
+
     if (file) {
       // dapatkan extension file nya
       const split = file.originalname.split(".");
@@ -41,7 +51,9 @@ const createProduct = async (req, res, next) => {
 
 const findProducts = async (req, res, next) => {
   try {
-    const products = await Product.findAll();
+    const products = await Product.findAll({
+      include: ["Shop"],
+    });
 
     res.status(200).json({
       status: "Success",
@@ -56,10 +68,8 @@ const findProducts = async (req, res, next) => {
 
 const findProductById = async (req, res, next) => {
   try {
-    const product = await Product.findOne({
-      where: {
-        id: req.params.id,
-      },
+    const product = await Product.findByPk(req.params.id, {
+      include: ["Shop"],
     });
 
     res.status(200).json({
@@ -99,7 +109,6 @@ const UpdateProduct = async (req, res, next) => {
 };
 
 const deleteProduct = async (req, res, next) => {
-  const { name, price, stock } = req.body;
   try {
     const product = await Product.findOne({
       where: {

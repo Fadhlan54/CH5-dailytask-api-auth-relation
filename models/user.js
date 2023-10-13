@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false,
         },
       });
+      User.belongsToMany(models.Shop, {
+        through: "UserShop",
+        as: "Shop",
+      });
     }
   }
   User.init(
